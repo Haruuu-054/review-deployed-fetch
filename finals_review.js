@@ -12,7 +12,7 @@ function getEmployees() {
     let html = ''; // Initialize an empty string to store the HTML for table rows
 
     // Fetch data from the API
-    fetch('https://reviewer-finals-deployment.onrender.com/api/members', {
+    fetch('https://reviewer-finals-deployment.onrender.com/api/members', {mode: "cors"}, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
