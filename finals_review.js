@@ -58,11 +58,13 @@ function getEmployees() {
 
 //POST FETCH (INSERT)
 
-submit.addEventListener('click', ()=>{
-    let first_name = document.querySelector('#first_name').value
-    let last_name = document.querySelector('#last_name').value
-    let email = document.querySelector('#email').value
-    let gender = document.querySelector('#gender').value
+submit.addEventListener('click', (event) => {
+    event.preventDefault(); // Prevent form submission
+
+    let first_name = document.querySelector('#first_name').value;
+    let last_name = document.querySelector('#last_name').value;
+    let email = document.querySelector('#email').value;
+    let gender = document.querySelector('#gender').value;
 
     let formData = {
         'first_name': first_name, 'last_name': last_name, 'email': email, 'gender': gender
@@ -71,11 +73,22 @@ submit.addEventListener('click', ()=>{
     fetch('https://reviewer-finals-deployment.onrender.com/api/members', {
         method: 'POST',
         body: JSON.stringify(formData),
-        headers:{
+        headers: {
             'Content-Type': 'application/json',
         }
     })
-})
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        alert('Member added successfully!');
+        location.reload(); // Optionally reload the page to see the new member
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while adding the member.');
+    });
+});
+
 
 //DELETE FETCH
 function deleteMember(id) {
@@ -107,7 +120,7 @@ function deleteMember(id) {
 
 //PUT FETCH (UPDATE)
 function updateMember(id) {
-    fetch(https://reviewer-finals-deployment.onrender.com/api/members${id})
+    fetch(`https://reviewer-finals-deployment.onrender.com/api/members/${id}`)
         .then(response => response.json())
         .then(data => {
             document.querySelector('#first_name').value = data[0].first_name;
