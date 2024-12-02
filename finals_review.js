@@ -1,5 +1,8 @@
+//GET FETCH
+
+// Select the table body element where employee data will be displayed
 const getemployees = document.querySelector('#employees');
-const updateBTN = document.querySelector('#update');
+const updateBTN =document.querySelector('#update')
 const submit = document.querySelector('#submit');
 
 // Add an event listener to the window to load employee data when the page loads
@@ -12,17 +15,9 @@ function getEmployees() {
     let html = ''; // Initialize an empty string to store the HTML for table rows
 
     // Fetch data from the API
-    fetch(`https://reviewer-finals-deployment.onrender.com/api/members`,{
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            // Optionally, you can add more headers if required (e.g., authorization tokens)
-        },
-    })
+    fetch('https://reviewer-finals-deployment.onrender.com/api/members', { mode: 'cors' })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            console.log(response); // Log the raw response for debugging purposes
             return response.json(); // Parse the JSON data from the response
         })
         .then(data => {
@@ -30,41 +25,36 @@ function getEmployees() {
 
             // Loop through each member in the data array and create table rows
             data.forEach(element => {
-                html += `
-                    <tr>
-                        <td>${element.first_name}</td>
-                        <td>${element.last_name}</td>
-                        <td>
-                            <a href="javascript:void(0)" onClick="deleteMember(${element.id})">
-                                <!-- Delete icon SVG here -->
-                            </a>
-                            <a href="javascript:void(0)" onclick="updateMember(${element.id})">
-                                <!-- Update icon SVG here -->
-                            </a>
-                        </td>
-                    </tr>
-                `;
+                html += 
+`                <tr>
+                    <td>${element.first_name}</td>
+                    <td>${element.last_name}</td> 
+                    <td><a href = "javascript:void(0)" onClick = "deleteMember(${element.id})"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive-fill" viewBox="0 0 16 16">
+  <path d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8z"/>
+</svg></a>
+<a href = "javascript:void(0)" onclick = "updateMember(${element.id})"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+  <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+</svg></a></td>
+                </tr>`
+                ;
             });
 
             // Update the innerHTML of the table body with the generated rows
             getemployees.innerHTML = html;
         })
         .catch(error => {
-            console.log('Fetch error:', error); // Log any errors encountered during the fetch process
+            console.log(error); // Log any errors encountered during the fetch process
         });
 }
 
 
-
 //POST FETCH (INSERT)
 
-submit.addEventListener('click', (event) => {
-    event.preventDefault(); // Prevent form submission
-
-    let first_name = document.querySelector('#first_name').value;
-    let last_name = document.querySelector('#last_name').value;
-    let email = document.querySelector('#email').value;
-    let gender = document.querySelector('#gender').value;
+submit.addEventListener('click', ()=>{
+    let first_name = document.querySelector('#first_name').value
+    let last_name = document.querySelector('#last_name').value
+    let email = document.querySelector('#email').value
+    let gender = document.querySelector('#gender').value
 
     let formData = {
         'first_name': first_name, 'last_name': last_name, 'email': email, 'gender': gender
@@ -73,22 +63,11 @@ submit.addEventListener('click', (event) => {
     fetch('https://reviewer-finals-deployment.onrender.com/api/members', {
         method: 'POST',
         body: JSON.stringify(formData),
-        headers: {
+        headers:{
             'Content-Type': 'application/json',
         }
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        alert('Member added successfully!');
-        location.reload(); // Optionally reload the page to see the new member
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while adding the member.');
-    });
-});
-
+})
 
 //DELETE FETCH
 function deleteMember(id) {
@@ -143,7 +122,7 @@ updateBTN.addEventListener('click', () => {
     let formData = { first_name, last_name, email, gender, id };
 
     // Sending the update request
-    fetch('http://localhost:5000/api/members', {
+    fetch('https://reviewer-finals-deployment.onrender.com/api/members', {
         method: 'PUT',
         body: JSON.stringify(formData),
         headers: {
